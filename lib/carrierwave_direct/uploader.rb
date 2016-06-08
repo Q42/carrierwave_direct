@@ -25,10 +25,6 @@ module CarrierWaveDirect
     include CarrierWaveDirect::Uploader::ContentType
     include CarrierWaveDirect::Uploader::DirectUrl
 
-    def acl
-      fog_public ? 'public-read' : 'private'
-    end
-
     def policy(options = {})
       options[:expiration] ||= upload_expiration
       options[:min_file_size] ||= min_file_size
@@ -133,14 +129,11 @@ module CarrierWaveDirect
     end
 
     def generate_policy(options)
-      conditions = [
-        ["starts-with", "$utf8", ""],
-        ["starts-with", "$key", key.sub(/#{Regexp.escape(FILENAME_WILDCARD)}\z/, "")]
-      ]
-
+      conditions = []
+      conditions << ["starts-with", "$utf8", ""]
+      conditions << ["starts-with", "$key", key.sub(/#{Regexp.escape(FILENAME_WILDCARD)}\z/, "")]
       conditions << ["starts-with", "$Content-Type", ""] if will_include_content_type
       conditions << {"bucket" => fog_directory}
-      conditions << {"acl" => acl}
 
       if use_action_status
         conditions << {"success_action_status" => success_action_status}
