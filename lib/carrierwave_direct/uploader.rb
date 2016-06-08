@@ -59,7 +59,7 @@ module CarrierWaveDirect
       if present?
         self.key = decoded_key # explicitly set key
       else
-        @key = "#{store_dir}/#{guid}/#{FILENAME_WILDCARD}"
+        @key = "#{guid}/#{FILENAME_WILDCARD}"
       end
       @key
     end
@@ -78,7 +78,7 @@ module CarrierWaveDirect
     end
 
     def key_regexp
-      /\A(#{store_dir}|#{cache_dir})\/[a-f\d\-]+\/.+\.(?i)#{extension_regexp}(?-i)\z/
+      /\A([a-f\d\-]+\/.+\.(?i)#{extension_regexp}(?-i)\z/
     end
 
     def extension_regexp
